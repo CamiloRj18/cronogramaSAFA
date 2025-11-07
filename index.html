@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Gantt - Cronograma XP 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .gantt-wrapper {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        .gantt-chart {
+            min-width: 1200px;
+        }
+        
+        .timeline {
+            display: grid;
+            grid-template-columns: 250px repeat(11, 1fr);
+            gap: 0;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #34495e;
+            padding-bottom: 10px;
+        }
+        
+        .month {
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 13px;
+            padding: 8px 0;
+        }
+        
+        .task-row {
+            display: grid;
+            grid-template-columns: 250px repeat(11, 1fr);
+            gap: 0;
+            margin-bottom: 2px;
+            min-height: 60px;
+            align-items: center;
+        }
+        
+        .task-label {
+            padding: 10px 15px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #2c3e50;
+            border-right: 2px solid #ecf0f1;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .task-timeline {
+            display: contents;
+        }
+        
+        .task-bar {
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            margin: 10px 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .task-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        
+        .empty-cell {
+            height: 40px;
+            margin: 10px 5px;
+        }
+        
+        /* Colores para cada fase */
+        .planeacion {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .diseno {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .codificacion {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+        
+        .pruebas {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: #2c3e50;
+        }
+        
+        .retroalimentacion {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+        
+        .cierre {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 2px solid #ecf0f1;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .info-panel {
+            background: #ecf0f1;
+            padding: 20px 30px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .info-panel h3 {
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+        
+        @media (max-width: 768px) {
+            .gantt-wrapper {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .task-label {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Diagrama de Gantt - Metodología XP</h1>
+            <p>Cronograma del Proyecto | Febrero - Diciembre 2025 | Duración: 11 meses</p>
+        </div>
+        
+        <div class="gantt-wrapper">
+            <div class="gantt-chart">
+                <!-- Timeline Header -->
+                <div class="timeline">
+                    <div class="month" style="border-right: 2px solid #34495e;">Fase</div>
+                    <div class="month">Feb</div>
+                    <div class="month">Mar</div>
+                    <div class="month">Abr</div>
+                    <div class="month">May</div>
+                    <div class="month">Jun</div>
+                    <div class="month">Jul</div>
+                    <div class="month">Ago</div>
+                    <div class="month">Sep</div>
+                    <div class="month">Oct</div>
+                    <div class="month">Nov</div>
+                    <div class="month">Dic</div>
+                </div>
+                
+                <!-- Planeación -->
+                <div class="task-row">
+                    <div class="task-label">🔵 Planeación</div>
+                    <div class="task-timeline">
+                        <div class="task-bar planeacion" style="grid-column: span 2;">2 meses</div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                    </div>
+                </div>
+                
+                <!-- Diseño -->
+                <div class="task-row">
+                    <div class="task-label">🟢 Diseño</div>
+                    <div class="task-timeline">
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="task-bar diseno" style="grid-column: span 2;">2 meses</div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                    </div>
+                </div>
+                
+                <!-- Codificación -->
+                <div class="task-row">
+                    <div class="task-label">🟠 Codificación</div>
+                    <div class="task-timeline">
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="task-bar codificacion" style="grid-column: span 3;">3 meses</div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                    </div>
+                </div>
+                
+                <!-- Pruebas -->
+                <div class="task-row">
+                    <div class="task-label">🟡 Pruebas</div>
+                    <div class="task-timeline">
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="task-bar pruebas" style="grid-column: span 2;">2 meses</div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                    </div>
+                </div>
+                
+                <!-- Retroalimentación y Mejora -->
+                <div class="task-row">
+                    <div class="task-label">🟣 Retroalimentación</div>
+                    <div class="task-timeline">
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="task-bar retroalimentacion">1 mes</div>
+                        <div class="empty-cell"></div>
+                    </div>
+                </div>
+                
+                <!-- Cierre -->
+                <div class="task-row">
+                    <div class="task-label">🔴 Cierre</div>
+                    <div class="task-timeline">
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="empty-cell"></div>
+                        <div class="task-bar cierre">1 mes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color planeacion"></div>
+                <span><strong>Planeación:</strong> Feb - Mar (2 meses)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color diseno"></div>
+                <span><strong>Diseño:</strong> Abr - May (2 meses)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color codificacion"></div>
+                <span><strong>Codificación:</strong> Jun - Ago (3 meses)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color pruebas"></div>
+                <span><strong>Pruebas:</strong> Sep - Oct (2 meses)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color retroalimentacion"></div>
+                <span><strong>Retroalimentación:</strong> Nov (1 mes)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color cierre"></div>
+                <span><strong>Cierre:</strong> Dic (1 mes)</span>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📋 Información del Proyecto</h3>
+            <p><strong>Responsables principales:</strong> Camilo Ramírez, Carlos Santiago Leal, Junta Administradora</p>
+            <p><strong>Metodología:</strong> Extreme Programming (XP)</p>
+            <p><strong>Duración total:</strong> 11 meses (Febrero - Diciembre 2025)</p>
+        </div>
+    </div>
+</body>
+</html>
